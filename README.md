@@ -37,12 +37,12 @@ We provide a sample data set which is available on Zenodo:
 
 The sample data set is a subset of the CRCM5-LE ([Leduc et al. 2019](https://journals.ametsoc.org/jamc/article/58/4/663/336/The-ClimEx-Project-A-50-Member-Ensemble-of-Climate)) and preprocessed as described in our manuscript (TODO: add link). The original data can be accessed at the [ClimEx data Access page](https://www.climex-project.org/en/data-access).
 
-To correctly load the data, you need to copy the file [``settings.py``](https://github.com/christinaheinze/climate-ae-refac/blob/release/python/settings.py) (TODO: adjust link after moving the repo) and rename it to ``local_settings.py``. In ``local_settings.py``, specify (a) where the data is located in ``DATA_PATH``, and (b) where the output should be saved in ``OUT_PATH``. 
+To correctly load the data, you need to copy the file [``settings.py``](https://github.com/christinaheinze/latent-linear-adjustment-autoencoders/blob/master/python/settings.py) and rename it to ``local_settings.py``. In ``local_settings.py``, specify (a) where the data is located in ``DATA_PATH``, and (b) where the output should be saved in ``OUT_PATH``. 
 
 
 ## Running experiments
 
-The commands to run the experiments are detailed in ``python/run-experiments.sh``. Note that you need to add the path of the [``python``](https://github.com/christinaheinze/climate-ae-refac/tree/release/python) (TODO: adjust link after moving the repo) directory to your ``PYTHONPATH`` (see ``python/run-experiments.sh``). 
+The commands to run the experiments are detailed in ``python/run-experiments.sh``. Note that you need to add the path of the [``python``](https://github.com/christinaheinze/latent-linear-adjustment-autoencoders/blob/master/python) directory to your ``PYTHONPATH`` (see ``python/run-experiments.sh``). 
 
 The first step consists of training the Latent Linear Adjustment autoencoder model. From the ``python`` directory run:
 
