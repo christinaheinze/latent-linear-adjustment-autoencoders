@@ -1,0 +1,49 @@
+{
+    "seed": 64,
+    "anno_indices": 750,
+    "temp_indices": 0,
+    "psl_indices": 0,
+
+    "architecture": "convolutional",
+    "ae_type": "variational",
+    "dim_latent": 400,
+    "num_filters_out": 1,
+    "sigmoid_activation": false,
+    "activation": "lrelu",
+    "mean_encode_lm": 1,
+
+    "num_fc_layers": 2,
+    "num_hiddens": [500, 500, 500, 500, 500, 500],
+
+    "num_conv_layers": 3,
+    "filter_sizes": [16, 32, 64, 128, 256],
+    "num_residual_layers": 1,
+    "num_filters_resnet_conv1": 64,
+    "num_filters_resnet_conv2": 64,
+    "kernel_size": 3, 
+    
+    "dataset": "prec_psl",
+    "local_json_dir_name": "results_files",
+    
+    "penalty_weight": 1.0,
+
+    "learning_rate": 1e-3,
+    "learning_rate_lm": 1e-3,
+    "decay_every": 5000,
+    "decay_base": 0.96,
+    "batch_size": 64,
+    "num_epochs": 100, 
+
+    "batch_norm": false,
+    "bn_momentum": 0.5,
+    "bn_renorm": false,
+    "use_dropout": false,
+    "dropout_rate": 0.0,
+    "ae_l2_penalty_weight": 1e-3,
+    "lm_l2_penalty_weight": 0,
+
+    "eval_every_n_epochs": 25,
+    "save_summary_steps": 500,
+    "save_checkpoints_secs": 600,
+    "log_step_count_steps": 500
+}
