@@ -1,6 +1,6 @@
 # Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution
 
-This repository contains the code of the autoencoder model proposed in "Latent Linear Adjustment autoencoders: A novel method for estimating and simulating dynamic precipitation at high resolution" (TODO: add arxiv/gmd link). In the manuscript, we have demonstrated how Latent Linear Adjustment autoencoders can be applied for dynamical adjustment at high resolution and for emulating dynamically-induced variability in daily precipitation fields. Futher applications such as regional detection & attribution, statistical downscaling or transfer learning between models are conceivable.
+This repository contains the code of the autoencoder model proposed in "Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution" (TODO: add arxiv/gmd link). In the manuscript, we have demonstrated how Latent Linear Adjustment autoencoders can be applied for dynamical adjustment at high resolution and for emulating dynamically-induced variability in daily precipitation fields. Futher applications such as regional detection & attribution, statistical downscaling or transfer learning between models are conceivable.
 
 This README is not intended to be completely self-explanatory, and should be read alongside the manuscript. Below we give an overview of the model, followed by detailed instructions how to reproduce the results reported in the manuscript. 
 
