@@ -21,7 +21,7 @@ To allow for the linearity between circulation and the latent space, the model i
 
 ## Installing dependencies
 
-You need at least Python 3.7. The dependencies are managed with [``poetry``](https://python-poetry.org/). To create a virtual environment and install them using poetry, run:
+You need Python 3.8. The dependencies are managed with [``poetry``](https://python-poetry.org/). To create a virtual environment and install them using poetry, run:
 
 ```
 python -m virtualenv env
