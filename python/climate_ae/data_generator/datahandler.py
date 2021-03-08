@@ -2,6 +2,7 @@ import numpy as np
 
 import local_settings
 from climate_ae.data_generator import temp_psl, prec_psl
+from climate_ae.data_generator import prec_psl_shorter_training_period as prec_psl_short
 
 
 def prec_psl_input_fn(params, mode):
@@ -11,6 +12,21 @@ def prec_psl_input_fn(params, mode):
         dataset = prec_psl.test1(local_settings.DATA_PATH)
     elif mode == "test2":
         dataset = prec_psl.test2(local_settings.DATA_PATH)
+
+    dataset = dataset.map(lambda x, anno, psl, temp, year, month, day: 
+        {"inputs": x, "anno": anno, "psl_mean_ens": psl, "temp_mean_ens": temp, 
+        "year": year, "month": month, "day": day})
+
+    return dataset
+
+
+def prec_psl_short_input_fn(params, mode):
+    if mode == "train":
+        dataset = prec_psl_short.train(local_settings.DATA_PATH)
+    elif mode == "test1":
+        dataset = prec_psl_short.test1(local_settings.DATA_PATH)
+    elif mode == "test2":
+        dataset = prec_psl_short.test2(local_settings.DATA_PATH)
 
     dataset = dataset.map(lambda x, anno, psl, temp, year, month, day: 
         {"inputs": x, "anno": anno, "psl_mean_ens": psl, "temp_mean_ens": temp, 
@@ -38,6 +54,8 @@ def input_fn(params, mode, repeat=True, n_repeat=None, shuffle=True,
     buffer_size=10000, drop_rem=True):
     if params.dataset == 'prec_psl' or params.dataset == 'prec_psl_sds5': # for compatibility with old models
         dataset = prec_psl_input_fn(params, mode)
+    if params.dataset == 'prec_psl_short':
+        dataset = prec_psl_short_input_fn(params, mode)
     elif params.dataset == 'temp_psl' or params.dataset == 'prec_psl_sds6': # for compatibility with old models
         dataset = temp_psl_input_fn(params, mode)
     else:
