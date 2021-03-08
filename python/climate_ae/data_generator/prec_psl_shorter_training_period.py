@@ -16,7 +16,7 @@ DTYPE = tf.float64
 
 
 def train(directory):
-    tfrecords_filename = 'train_prec_psl_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
+    tfrecords_filename = 'train_prec_psl_short_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
     subdir = ''
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
