@@ -17,7 +17,7 @@ DTYPE = tf.float64
 
 def train(directory):
     tfrecords_filename = 'train_prec_psl_short_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
-    subdir = ''
+    subdir = '1955_2020'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
         DANNO2, DANNO3, DTYPE)
@@ -26,7 +26,7 @@ def train(directory):
 
 def test1(directory):
     tfrecords_filename = 'test_prec_psl_short_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
-    subdir = ''
+    subdir = '1955_2020'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
         DANNO2, DANNO3, DTYPE)
@@ -35,7 +35,7 @@ def test1(directory):
 
 def test2(directory):
     tfrecords_filename = 'holdout_prec_psl_short_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
-    subdir = ''
+    subdir = '1955_2020'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
         DANNO2, DANNO3, DTYPE)
