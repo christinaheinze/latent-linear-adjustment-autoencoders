@@ -10,6 +10,8 @@ from climate_ae.models.ae.train_linear_model import train_linear_model
 
 flags.DEFINE_string(name='checkpoint_id', default='ckpt_190623_0508_eeDLL34fvB_2278395',
     help='checkpoint directory')
+flags.DEFINE_string(name='results_path', default='exp_jsons', 
+    help='checkpoint directory')
 flags.DEFINE_integer(name='precip', default=0, 
     help='Flag whether handling precipitation (otherwise temperature).')
 flags.DEFINE_integer(name='save_nc_files', default=0, 
@@ -18,6 +20,8 @@ flags.DEFINE_integer(name='save_nc_files', default=0,
 
 def main(_):
     # get results and checkpoint paths
+    results_path = os.path.join(local_settings.OUT_PATH, 
+        flags.FLAGS.results_path)
     checkpoint_path = os.path.join(local_settings.OUT_PATH, 'checkpoints')
     checkpoint_folders = os.listdir(checkpoint_path)
     checkpoint_folder = [f for f in checkpoint_folders if flags.FLAGS.checkpoint_id in f]
@@ -32,7 +36,8 @@ def main(_):
     checkpoint_dir = os.path.join(checkpoint_path, checkpoint_folder)
 
     # load or retrain linear model and compute metrics and plots
-    train_linear_model(checkpoint_dir, flags.FLAGS.precip, 
+    train_linear_model(checkpoint_dir, results_path, 
+        flags.FLAGS.precip, 
         flags.FLAGS.save_nc_files)
 
 

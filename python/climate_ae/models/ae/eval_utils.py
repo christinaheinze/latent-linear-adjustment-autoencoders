@@ -7,10 +7,12 @@ import matplotlib.pyplot as plt
 
 
 def compute_r2(target, pred):
+    ''' computes R2 given target time series and predicted time series
+         in other words, computes R2 at the grid point level'''
     residual_ss = np.sum((target-pred)**2)
     colmeans_target = np.mean(target, axis=0)
     total_ss = np.sum((target-colmeans_target)**2)
-    r2 = 1-residual_ss/total_ss    
+    r2 = 1-residual_ss/total_ss  
     return r2
 
 
@@ -130,6 +132,8 @@ def _plot_mse_map(map_xxhat, map_xxhatexp, out_dir, split, pdf):
 
 
 def compute_r2_map(x, xhat):
+    '''computes the R2 map, i.e. computes R2 for each grid point 
+       and returns the resulting map'''
     len_x = x.shape[1]
     len_y = x.shape[2]
     output_map = np.zeros([len_x, len_y])
@@ -567,3 +571,4 @@ def plot_timeseries_boots_quiz(xhatexp, xhatexp_boots, out_dir, split, loc=None,
     os.makedirs(out_dir, exist_ok=True)
     fig.savefig(os.path.join(out_dir,'{}_boots_ts_quiz_sol.pdf'.format(split)), 
         bbox_inches='tight')
+

@@ -80,7 +80,7 @@ def predict_latents_and_decode(model, reg_model, annos, out_shape):
     return xhatexp
 
 
-def train_linear_model(checkpoint_path, precip, save_nc_files):
+def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
     # get configs from model
     with open(os.path.join(checkpoint_path, "hparams.pkl"), 'rb') as f:
         config = pickle.load(f)
@@ -236,6 +236,51 @@ def train_linear_model(checkpoint_path, precip, save_nc_files):
     np.save(os.path.join(out_dir, "tr_xhat.npy"), imgs_tr[1])
     np.save(os.path.join(out_dir, "tr_xhatexp.npy"), imgs_tr[2])
 
+    #################
+    # save summaries of metrics maps 
+    #################
+
+    # mean MSE over entire field
+    test_metrics = {}
+    test_metrics.update({"mean_mse_x_xhat": np.mean(mse_map_test[0])})
+    test_metrics.update({"mean_mse_x_xhatexp": np.mean(mse_map_test[1])})
+    # mean R2 over entire field
+    test_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_test[0])})
+    test_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_test[1])})
+
+    # mean MSE over entire field
+    ho_metrics = {}
+    ho_metrics.update({"mean_mse_x_xhat": np.mean(mse_map_ho[0])})
+    ho_metrics.update({"mean_mse_x_xhatexp": np.mean(mse_map_ho[1])})
+    # mean R2 over entire field
+    ho_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_ho[0])})
+    ho_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_ho[1])})
+
+    
+    # save metrics in json file
+    exp_jsons = os.listdir(results_path)
+    exp_json = [f for f in exp_jsons if config.id in f][0]
+    exp_json_path = os.path.join(results_path, exp_json)
+    results = utils.load_json(exp_json_path)
+    results[config.id]['linear_model_test'] = test_metrics
+    results[config.id]['linear_model_ho'] = ho_metrics
+    
+    with open(exp_json_path, 'w') as result_file:
+        json.dump(results, result_file, sort_keys=True, indent=4)
+
+    # save metrics again in checkpoint dir
+    save_path = os.path.join(out_dir, "metrics.json")
+    metrics = {'test': test_metrics, 'ho': ho_metrics}
+    
+    # print
+    print("Metrics:")
+    for entry in metrics:
+        print(entry)
+        print(metrics[entry])
+
+    with open(save_path, 'w') as result_file:
+        json.dump(metrics, result_file, sort_keys=True, indent=4)
+
     # if precipitation data, transform back to original scale
     if precip:
         out_dir_orig = "{}_orig".format(out_dir)
@@ -291,3 +336,48 @@ def train_linear_model(checkpoint_path, precip, save_nc_files):
         np.save(os.path.join(out_dir_orig, "tr_orig_x.npy"), imgs_tr_orig[0])
         np.save(os.path.join(out_dir_orig, "tr_orig_xhat.npy"), imgs_tr_orig[1])
         np.save(os.path.join(out_dir_orig, "tr_orig_xhatexp.npy"), imgs_tr_orig[2])
+
+        #################
+        # save summaries of metrics maps 
+        #################
+
+        # mean MSE over entire field
+        test_metrics = {}
+        test_metrics.update({"mean_mse_x_xhat": np.mean(mse_maps_test_orig[0])})
+        test_metrics.update({"mean_mse_x_xhatexp": np.mean(mse_maps_test_orig[1])})
+        # mean R2 over entire field
+        test_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_test_orig[0])})
+        test_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_test_orig[1])})
+
+        # mean MSE over entire field
+        ho_metrics = {}
+        ho_metrics.update({"mean_mse_x_xhat": np.mean(mse_maps_ho_orig[0])})
+        ho_metrics.update({"mean_mse_x_xhatexp": np.mean(mse_maps_ho_orig[1])})
+        # mean R2 over entire field
+        ho_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_ho_orig[0])})
+        ho_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_ho_orig[1])})
+
+        
+        # save metrics in json file
+        exp_jsons = os.listdir(results_path)
+        exp_json = [f for f in exp_jsons if config.id in f][0]
+        exp_json_path = os.path.join(results_path, exp_json)
+        results = utils.load_json(exp_json_path)
+        results[config.id]['linear_model_test_orig'] = test_metrics
+        results[config.id]['linear_model_ho_orig'] = ho_metrics
+        
+        with open(exp_json_path, 'w') as result_file:
+            json.dump(results, result_file, sort_keys=True, indent=4)
+
+        # save metrics again in checkpoint dir
+        save_path = os.path.join(out_dir_orig, "metrics_orig.json")
+        metrics = {'test': test_metrics, 'ho': ho_metrics}
+        
+        # print
+        print("Metrics:")
+        for entry in metrics:
+            print(entry)
+            print(metrics[entry])
+
+        with open(save_path, 'w') as result_file:
+            json.dump(metrics, result_file, sort_keys=True, indent=4)
