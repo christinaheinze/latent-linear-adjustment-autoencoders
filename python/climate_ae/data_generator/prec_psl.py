@@ -50,14 +50,12 @@ def test2(directory):
 # "kby" "kbz" "kca" "kcb" "kcc" 
 # "kcd" "kce" "kcf" "kcg" "kch" 
 # "kci" "kcj" "kck" "kcl" "kcm" 
-
-
 # "kcn" "kco"  "kcp" "kcq" "kcr" 
 # "kcs" "kct" "kcu" "kcv" "kcw" "kcx"
 
 def test_kbb(directory): # same as test2
     tfrecords_filename = 'holdout_prec_psl_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
-    subdir = '1955_2070/additional_ho'
+    subdir = '1955_2070'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
         DANNO2, DANNO3, DTYPE)

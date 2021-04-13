@@ -21,7 +21,7 @@ import climate_ae.models.ae.climate_utils as climate_utils
 import climate_ae.models.ae.train as train
 
 DEBUG = False
-
+process_additional_holdout_members = True
 
 def load_data(inputs, model, subset=False, debug=False):
     # get training data for linear latent space model
@@ -80,7 +80,60 @@ def predict_latents_and_decode(model, reg_model, annos, out_shape):
     return xhatexp
 
 
-def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
+def process_holdout(holdout_datasets, model, reg_model, save_nc_files, out_dir):
+    results = {}
+    for ho in holdout_datasets:
+        result = load_data(holdout_datasets[ho], model, debug=DEBUG)
+        ho_inputs, ho_recons, _, ho_annos, ho_years, ho_months, ho_days = result
+        
+        # predict latents for holdout set and decode
+        ho_xhatexp = predict_latents_and_decode(model, reg_model, ho_annos, 
+            np.shape(ho_inputs))
+        
+        results[ho] =  ho_inputs, ho_recons, ho_annos, ho_xhatexp
+
+        if save_nc_files:
+            # save
+            climate_utils.save_ncdf_file_high_res_prec(ho_inputs, ho_years, ho_months, 
+                ho_days, "ho_{}_input.nc".format(ho), out_dir)
+            climate_utils.save_ncdf_file_high_res_prec(ho_xhatexp, ho_years, ho_months, 
+                ho_days, "ho_{}_pred.nc".format(ho), out_dir)
+    return results
+
+
+def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
+    ho_inputs, ho_recons, ho_annos, ho_xhatexp = results
+    r2_maps_ho = eval_utils.plot_r2_map(ho_inputs, ho_recons, 
+        ho_xhatexp, out_dir, "holdout_{}".format(label)) 
+    mse_map_ho = eval_utils.plot_mse_map(ho_inputs, ho_recons, ho_xhatexp, 
+        out_dir, "holdout_{}".format(label)) 
+    eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir, 
+        "holdout_{}".format(label)) 
+
+    print("\n#### Holdout ensemble: {}".format(label))
+    print("Mean MSE(x, xhat): {}".format(np.mean(mse_map_ho[0])))
+    print("Mean MSE(x, xhatexp): {}".format(np.mean(mse_map_ho[1])))
+    print("Mean R2(x, xhat): {}".format(np.mean(r2_maps_ho[0])))
+    print("Mean R2(x, xhatexp): {}".format(np.mean(r2_maps_ho[1])))
+    
+    if precip: 
+        ho_inputs_2 = ho_inputs ** 2
+        ho_recons_2 = ho_recons ** 2
+        ho_xhatexp_2 = ho_xhatexp ** 2
+        r2_maps_ho_orig = eval_utils.plot_r2_map(ho_inputs_2, ho_recons_2, 
+            ho_xhatexp_2, out_dir_orig, "holdout_orig_{}".format(label)) 
+        mse_map_ho_orig = eval_utils.plot_mse_map(ho_inputs_2, ho_recons_2, 
+            ho_xhatexp_2, out_dir_orig, "holdout_orig_{}".format(label)) 
+        eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir_orig, 
+            "holdout_orig_{}".format(label), transform_back=True) 
+        print("\n# Orig: {}".format(label))
+        print("Mean MSE(x, xhat): {}".format(np.mean(mse_map_ho_orig[0])))
+        print("Mean MSE(x, xhatexp): {}".format(np.mean(mse_map_ho_orig[1])))
+        print("Mean R2(x, xhat): {}".format(np.mean(r2_maps_ho_orig[0])))
+        print("Mean R2(x, xhatexp): {}".format(np.mean(r2_maps_ho_orig[1])))  
+
+
+def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc_files):
     # get configs from model
     with open(os.path.join(checkpoint_path, "hparams.pkl"), 'rb') as f:
         config = pickle.load(f)
@@ -137,6 +190,7 @@ def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
 
     global_step = tf.Variable(initial_value=0, dtype=tf.int64, trainable=False, 
         name="global_step")
+
     train_inputs = input_anno(params=config, mode="train", 
         repeat=False)
     test_inputs = input_anno(params=config, mode="test1", 
@@ -256,20 +310,6 @@ def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
     ho_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_ho[0])})
     ho_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_ho[1])})
 
-    
-    # save metrics in json file
-    exp_jsons = os.listdir(results_path)
-    exp_json = [f for f in exp_jsons if config.id in f][0]
-    exp_json_path = os.path.join(results_path, exp_json)
-    results = utils.load_json(exp_json_path)
-    results[config.id]['linear_model_test'] = test_metrics
-    results[config.id]['linear_model_ho'] = ho_metrics
-    
-    with open(exp_json_path, 'w') as result_file:
-        json.dump(results, result_file, sort_keys=True, indent=4)
-
-    # save metrics again in checkpoint dir
-    save_path = os.path.join(out_dir, "metrics.json")
     metrics = {'test': test_metrics, 'ho': ho_metrics}
     
     # print
@@ -278,8 +318,24 @@ def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
         print(entry)
         print(metrics[entry])
 
+    # save metrics again in checkpoint dir
+    save_path = os.path.join(out_dir, "metrics.json")
     with open(save_path, 'w') as result_file:
         json.dump(metrics, result_file, sort_keys=True, indent=4)
+
+    if load_json:    
+        # save metrics in json file
+        exp_jsons = os.listdir(results_path)
+        exp_json = [f for f in exp_jsons if config.id in f][0]
+        exp_json_path = os.path.join(results_path, exp_json)
+        results = utils.load_json(exp_json_path)
+        results[config.id]['linear_model_test'] = test_metrics
+        results[config.id]['linear_model_ho'] = ho_metrics
+        
+        with open(exp_json_path, 'w') as result_file:
+            json.dump(results, result_file, sort_keys=True, indent=4)
+
+        
 
     # if precipitation data, transform back to original scale
     if precip:
@@ -357,18 +413,6 @@ def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
         ho_metrics.update({"mean_r2_x_xhat": np.mean(r2_maps_ho_orig[0])})
         ho_metrics.update({"mean_r2_x_xhatexp": np.mean(r2_maps_ho_orig[1])})
 
-        
-        # save metrics in json file
-        exp_jsons = os.listdir(results_path)
-        exp_json = [f for f in exp_jsons if config.id in f][0]
-        exp_json_path = os.path.join(results_path, exp_json)
-        results = utils.load_json(exp_json_path)
-        results[config.id]['linear_model_test_orig'] = test_metrics
-        results[config.id]['linear_model_ho_orig'] = ho_metrics
-        
-        with open(exp_json_path, 'w') as result_file:
-            json.dump(results, result_file, sort_keys=True, indent=4)
-
         # save metrics again in checkpoint dir
         save_path = os.path.join(out_dir_orig, "metrics_orig.json")
         metrics = {'test': test_metrics, 'ho': ho_metrics}
@@ -381,3 +425,40 @@ def train_linear_model(checkpoint_path, results_path, precip, save_nc_files):
 
         with open(save_path, 'w') as result_file:
             json.dump(metrics, result_file, sort_keys=True, indent=4)
+
+        if load_json:
+            # save metrics in json file
+            exp_jsons = os.listdir(results_path)
+            exp_json = [f for f in exp_jsons if config.id in f][0]
+            exp_json_path = os.path.join(results_path, exp_json)
+            results = utils.load_json(exp_json_path)
+            results[config.id]['linear_model_test_orig'] = test_metrics
+            results[config.id]['linear_model_ho_orig'] = ho_metrics
+            
+            with open(exp_json_path, 'w') as result_file:
+                json.dump(results, result_file, sort_keys=True, indent=4)
+
+        
+
+    if process_additional_holdout_members:
+        holdout_names = ["kbd", "kbf", "kbh", "kbj", 
+            "kbl", "kbn", "kbo", "kbp", "kbr", 
+            "kbt", "kbu", "kbv", "kbw", "kbx", 
+            "kby", "kbz", "kca", "kcb", "kcc", 
+            "kcd", "kce", "kcf", "kcg", "kch", 
+            "kci", "kcj", "kck", "kcl", "kcm", 
+            "kcn", "kco", "kcp", "kcq", "kcr", 
+            "kcs", "kct", "kcu", "kcv", "kcw", "kcx"]
+        holdout_datasets = {}
+        for ho in holdout_names:
+            holdout_datasets[ho] = input_anno(params=config, 
+                mode="test_{}".format(ho), 
+                repeat=False)
+        
+        # process and save predictions for additional holdout datasets
+        results = process_holdout(holdout_datasets, model, reg, save_nc_files, out_dir)
+
+        for ho in results:
+            holdout_plots(results[ho], model, reg, ho, precip, out_dir, out_dir_orig)
+
+    
