@@ -83,6 +83,7 @@ def predict_latents_and_decode(model, reg_model, annos, out_shape):
 def process_holdout(holdout_datasets, model, reg_model, save_nc_files, out_dir):
     results = {}
     for ho in holdout_datasets:
+        print(ho)
         result = load_data(holdout_datasets[ho], model, debug=DEBUG)
         ho_inputs, ho_recons, _, ho_annos, ho_years, ho_months, ho_days = result
         
@@ -90,7 +91,7 @@ def process_holdout(holdout_datasets, model, reg_model, save_nc_files, out_dir):
         ho_xhatexp = predict_latents_and_decode(model, reg_model, ho_annos, 
             np.shape(ho_inputs))
         
-        results[ho] =  ho_inputs, ho_recons, ho_annos, ho_xhatexp
+        results[ho] = ho_inputs, ho_recons, ho_annos, ho_xhatexp
 
         if save_nc_files:
             # save
@@ -107,15 +108,29 @@ def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
         ho_xhatexp, out_dir, "holdout_{}".format(label)) 
     mse_map_ho = eval_utils.plot_mse_map(ho_inputs, ho_recons, ho_xhatexp, 
         out_dir, "holdout_{}".format(label)) 
+    mean_mse_x_xhat = np.mean(mse_map_ho[0])
+    mean_mse_x_xhatexp = np.mean(mse_map_ho[1])
+    mean_r2_x_xhat = np.mean(r2_maps_ho[0])
+    mean_r2_x_xhatexp = np.mean(r2_maps_ho[1])
     eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir, 
         "holdout_{}".format(label)) 
 
     print("\n#### Holdout ensemble: {}".format(label))
-    print("Mean MSE(x, xhat): {}".format(np.mean(mse_map_ho[0])))
-    print("Mean MSE(x, xhatexp): {}".format(np.mean(mse_map_ho[1])))
-    print("Mean R2(x, xhat): {}".format(np.mean(r2_maps_ho[0])))
-    print("Mean R2(x, xhatexp): {}".format(np.mean(r2_maps_ho[1])))
+    print("Mean MSE(x, xhat): {}".format(mean_mse_x_xhat))
+    print("Mean MSE(x, xhatexp): {}".format(mean_mse_x_xhatexp))
+    print("Mean R2(x, xhat): {}".format(mean_r2_x_xhat))
+    print("Mean R2(x, xhatexp): {}".format(mean_r2_x_xhatexp))
     
+    # save metrics again in checkpoint dir
+    save_path = os.path.join(out_dir, "metrics_{}.json".format(label))
+    metrics = {'mean_mse_x_xhat': mean_mse_x_xhat, 
+        'mean_mse_x_xhatexp': mean_mse_x_xhatexp,
+        'mean_r2_x_xhat': mean_r2_x_xhat,
+        'mean_r2_x_xhatexp': mean_r2_x_xhatexp}
+
+    with open(save_path, 'w') as result_file:
+        json.dump(metrics, result_file, sort_keys=True, indent=4)
+
     if precip: 
         ho_inputs_2 = ho_inputs ** 2
         ho_recons_2 = ho_recons ** 2
@@ -124,13 +139,27 @@ def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
             ho_xhatexp_2, out_dir_orig, "holdout_orig_{}".format(label)) 
         mse_map_ho_orig = eval_utils.plot_mse_map(ho_inputs_2, ho_recons_2, 
             ho_xhatexp_2, out_dir_orig, "holdout_orig_{}".format(label)) 
+        mean_mse_x_xhat = np.mean(mse_map_ho_orig[0])
+        mean_mse_x_xhatexp = np.mean(mse_map_ho_orig[1])
+        mean_r2_x_xhat = np.mean(r2_maps_ho_orig[0])
+        mean_r2_x_xhatexp = np.mean(r2_maps_ho_orig[1])
         eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir_orig, 
             "holdout_orig_{}".format(label), transform_back=True) 
         print("\n# Orig: {}".format(label))
-        print("Mean MSE(x, xhat): {}".format(np.mean(mse_map_ho_orig[0])))
-        print("Mean MSE(x, xhatexp): {}".format(np.mean(mse_map_ho_orig[1])))
-        print("Mean R2(x, xhat): {}".format(np.mean(r2_maps_ho_orig[0])))
-        print("Mean R2(x, xhatexp): {}".format(np.mean(r2_maps_ho_orig[1])))  
+        print("Mean MSE(x, xhat): {}".format(mean_mse_x_xhat))
+        print("Mean MSE(x, xhatexp): {}".format(mean_mse_x_xhatexp))
+        print("Mean R2(x, xhat): {}".format(mean_r2_x_xhat))
+        print("Mean R2(x, xhatexp): {}".format(mean_r2_x_xhatexp))
+
+        # save metrics again in checkpoint dir
+        save_path = os.path.join(out_dir_orig, "metrics_orig_{}.json".format(label))
+        metrics = {'mean_mse_x_xhat': mean_mse_x_xhat, 
+            'mean_mse_x_xhatexp': mean_mse_x_xhatexp,
+            'mean_r2_x_xhat': mean_r2_x_xhat,
+            'mean_r2_x_xhatexp': mean_r2_x_xhatexp}
+
+        with open(save_path, 'w') as result_file:
+            json.dump(metrics, result_file, sort_keys=True, indent=4)
 
 
 def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc_files):
@@ -441,13 +470,13 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
         
 
     if process_additional_holdout_members:
-        holdout_names = ["kbd", "kbf", "kbh", "kbj", 
-            "kbl", "kbn", "kbo", "kbp", "kbr", 
-            "kbt", "kbu", "kbv", "kbw", "kbx", 
-            "kby", "kbz", "kca", "kcb", "kcc", 
-            "kcd", "kce", "kcf", "kcg", "kch", 
-            "kci", "kcj", "kck", "kcl", "kcm", 
-            "kcn", "kco", "kcp", "kcq", "kcr", 
+        holdout_names = [ #"kbd", "kbf", "kbh", "kbj", 
+            # "kbl", "kbn", "kbo", "kbp", "kbr", 
+            # "kbt", "kbu", "kbv", "kbw", "kbx"] #, 
+            # "kby", "kbz", "kca", "kcb", "kcc", 
+            # "kcd", "kce", "kcf", "kcg", "kch", 
+            # "kci", "kcj", "kck", "kcl", "kcm", 
+            # "kcn", "kco", "kcp", "kcq", "kcr" #, 
             "kcs", "kct", "kcu", "kcv", "kcw", "kcx"]
         holdout_datasets = {}
         for ho in holdout_names:
