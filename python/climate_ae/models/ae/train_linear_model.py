@@ -21,7 +21,7 @@ import climate_ae.models.ae.climate_utils as climate_utils
 import climate_ae.models.ae.train as train
 
 DEBUG = False
-process_additional_holdout_members = True
+process_additional_holdout_members = False
 
 def load_data(inputs, model, subset=False, debug=False):
     # get training data for linear latent space model
@@ -278,6 +278,8 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
     # plots
     #################
 
+    
+
     # R2 map
     r2_maps_test = eval_utils.plot_r2_map(te_inputs, te_recons, te_xhatexp, 
         out_dir, "test") 
@@ -300,7 +302,7 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
     np.save(os.path.join(out_dir, "mse_map_ho_xxhat.npy"), mse_map_ho[0])
     np.save(os.path.join(out_dir, "mse_map_ho_xxhatexp.npy"), mse_map_ho[1])
 
-    # visualize reconstructions and interventions
+    # visualize reconstructions and interventions -- random
     imgs_test = eval_utils.visualize(te_inputs, te_annos, model, reg, out_dir, 
         "test")
     np.save(os.path.join(out_dir, "te_x.npy"), imgs_test[0])
@@ -318,6 +320,38 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
     np.save(os.path.join(out_dir, "tr_x.npy"), imgs_tr[0])
     np.save(os.path.join(out_dir, "tr_xhat.npy"), imgs_tr[1])
     np.save(os.path.join(out_dir, "tr_xhatexp.npy"), imgs_tr[2])
+
+    # visualize reconstructions and interventions -- quantiles
+    idx_quantiles_te = eval_utils.get_field_mse_quantile_idx(te_inputs, te_xhatexp)
+    idx_quantiles_ho = eval_utils.get_field_mse_quantile_idx(ho_inputs, ho_xhatexp)
+    print("Indices test:")
+    print(idx_quantiles_te)
+    print("Indices ho:")
+    print(idx_quantiles_ho)
+
+    imgs_test = eval_utils.visualize(te_inputs, te_annos, model, reg, out_dir, 
+        "test_q_mse", random=False, idx=idx_quantiles_te[0])
+    np.save(os.path.join(out_dir, "te_x_q_mse.npy"), imgs_test[0])
+    np.save(os.path.join(out_dir, "te_xhat_q_mse.npy"), imgs_test[1])
+    np.save(os.path.join(out_dir, "te_xhatexp_q_mse.npy"), imgs_test[2])
+
+    imgs_ho = eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir, 
+        "holdout_q_mse", random=False, idx=idx_quantiles_ho[0])
+    np.save(os.path.join(out_dir, "ho_x_q_mse.npy"), imgs_ho[0])
+    np.save(os.path.join(out_dir, "ho_xhat_q_mse.npy"), imgs_ho[1])
+    np.save(os.path.join(out_dir, "ho_xhatexp_q_mse.npy"), imgs_ho[2])
+
+    imgs_test = eval_utils.visualize(te_inputs, te_annos, model, reg, out_dir, 
+        "test_q_r2", random=False, idx=idx_quantiles_te[1])
+    np.save(os.path.join(out_dir, "te_x_q_mse.npy"), imgs_test[0])
+    np.save(os.path.join(out_dir, "te_xhat_q_mse.npy"), imgs_test[1])
+    np.save(os.path.join(out_dir, "te_xhatexp_q_mse.npy"), imgs_test[2])
+
+    imgs_ho = eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir, 
+        "holdout_q_r2", random=False, idx=idx_quantiles_ho[1])
+    np.save(os.path.join(out_dir, "ho_x_q_mse.npy"), imgs_ho[0])
+    np.save(os.path.join(out_dir, "ho_xhat_q_mse.npy"), imgs_ho[1])
+    np.save(os.path.join(out_dir, "ho_xhatexp_q_mse.npy"), imgs_ho[2])
 
     #################
     # save summaries of metrics maps 
@@ -470,13 +504,13 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
         
 
     if process_additional_holdout_members:
-        holdout_names = [ #"kbd", "kbf", "kbh", "kbj", 
-            # "kbl", "kbn", "kbo", "kbp", "kbr", 
-            # "kbt", "kbu", "kbv", "kbw", "kbx"] #, 
+        holdout_names = [#"kbd", "kbf", "kbh", "kbj", 
+            # "kbl", "kbn", "kbo", "kbp", "kbr"]
+            # "kbt", "kbu", "kbv", "kbw", "kbx", 
             # "kby", "kbz", "kca", "kcb", "kcc", 
             # "kcd", "kce", "kcf", "kcg", "kch", 
             # "kci", "kcj", "kck", "kcl", "kcm", 
-            # "kcn", "kco", "kcp", "kcq", "kcr" #, 
+            "kcn", "kco", "kcp", "kcq", "kcr", 
             "kcs", "kct", "kcu", "kcv", "kcw", "kcx"]
         holdout_datasets = {}
         for ho in holdout_names:

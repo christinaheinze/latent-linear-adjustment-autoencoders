@@ -6,6 +6,24 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
+def get_field_mse_quantile_idx(target, pred):
+    n_obs = target.shape[0]
+    mse = np.zeros([n_obs])
+    r2 = np.zeros([n_obs])
+    for i in range(n_obs):
+        mse[i] = np.mean((target[i, ...] - pred[i, ...])**2)
+        r2[i] = 1 - mse[i]/np.mean((target[i, ...] - np.mean(target[i, ...]))**2)
+    quantiles_ = [0, 0.25, 0.5, 0.75, 1]
+    idx_mse = {}
+    idx_r2 = {}
+    for q in quantiles_:
+        quant_mse = np.quantile(mse, q, interpolation='nearest')
+        idx_mse[q] = abs(mse-quant_mse).argmin()
+        quant_r2 = np.quantile(r2, q, interpolation='nearest')
+        idx_r2[q] = abs(r2-quant_r2).argmin()
+    return idx_mse, idx_r2
+
+
 def compute_r2(target, pred):
     ''' computes R2 given target time series and predicted time series
          in other words, computes R2 at the grid point level'''
@@ -158,7 +176,8 @@ def compute_mse_map(x, xhat):
 
 
 def visualize(te_inputs, te_annos, model, reg, out_dir, split, 
-    num_imgs = 15, seed=2, transform_back=False, pdf=True, random=True):
+    num_imgs = 15, seed=2, transform_back=False, pdf=True, 
+    random=True, idx=None):
 
     plot_format = 'pdf' if pdf else 'png'
 
@@ -169,7 +188,11 @@ def visualize(te_inputs, te_annos, model, reg, out_dir, split,
         np.random.seed(seed)
         indices = np.random.choice(np.arange(te_inputs.shape[0]), size=num_imgs)
     else:
-        indices = range(num_imgs)
+        if idx is None:
+            indices = range(num_imgs)
+        else:
+            indices = list(idx.values())
+            num_imgs = len(indices)
 
     te_input_sub = te_inputs[indices, ...]
     te_anno_sub = te_annos[indices, ...]
