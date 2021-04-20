@@ -343,15 +343,15 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
 
     imgs_test = eval_utils.visualize(te_inputs, te_annos, model, reg, out_dir, 
         "test_q_r2", random=False, idx=idx_quantiles_te[1])
-    np.save(os.path.join(out_dir, "te_x_q_mse.npy"), imgs_test[0])
-    np.save(os.path.join(out_dir, "te_xhat_q_mse.npy"), imgs_test[1])
-    np.save(os.path.join(out_dir, "te_xhatexp_q_mse.npy"), imgs_test[2])
+    np.save(os.path.join(out_dir, "te_x_q_r2.npy"), imgs_test[0])
+    np.save(os.path.join(out_dir, "te_xhat_q_r2.npy"), imgs_test[1])
+    np.save(os.path.join(out_dir, "te_xhatexp_q_r2.npy"), imgs_test[2])
 
     imgs_ho = eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir, 
         "holdout_q_r2", random=False, idx=idx_quantiles_ho[1])
-    np.save(os.path.join(out_dir, "ho_x_q_mse.npy"), imgs_ho[0])
-    np.save(os.path.join(out_dir, "ho_xhat_q_mse.npy"), imgs_ho[1])
-    np.save(os.path.join(out_dir, "ho_xhatexp_q_mse.npy"), imgs_ho[2])
+    np.save(os.path.join(out_dir, "ho_x_q_r2.npy"), imgs_ho[0])
+    np.save(os.path.join(out_dir, "ho_xhat_q_r2.npy"), imgs_ho[1])
+    np.save(os.path.join(out_dir, "ho_xhatexp_q_r2.npy"), imgs_ho[2])
 
     #################
     # save summaries of metrics maps 
