@@ -25,7 +25,7 @@ def train(directory):
 
 
 def test1(directory):
-    tfrecords_filename = 'test_prec_psl_short_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
+    tfrecords_filename = 'test_prec_psl_short_offset25_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
     subdir = '1955_2020_detrend_precip'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
@@ -34,7 +34,7 @@ def test1(directory):
 
 
 def test2(directory):
-    tfrecords_filename = 'holdout_prec_psl_short_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
+    tfrecords_filename = 'holdout_prec_psl_short_offset25_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
     subdir = '1955_2020_detrend_precip'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
@@ -44,7 +44,7 @@ def test2(directory):
 
 
 def test_kbb(directory): # same as test2
-    tfrecords_filename = 'holdout_prec_psl_short_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
+    tfrecords_filename = 'holdout_prec_psl_short_offset25_detrend_precip_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kbb.tfrecords'
     subdir = '1955_2020_detrend_precip'
     fname = os.path.join(directory, subdir, tfrecords_filename)
     ds = utils.climate_dataset(directory, fname, HEIGHT, WIDTH, DEPTH, DANNO1,
