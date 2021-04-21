@@ -16,6 +16,8 @@ flags.DEFINE_string(name='results_path', default='exp_jsons',
     help='checkpoint directory')
 flags.DEFINE_integer(name='precip', default=0, 
     help='Flag whether handling precipitation (otherwise temperature).')
+flags.DEFINE_integer(name='offset', default=0, 
+    help='')
 flags.DEFINE_integer(name='save_nc_files', default=0, 
     help='Flag whether to save nc files.')
 
@@ -39,7 +41,7 @@ def main(_):
 
     # load or retrain linear model and compute metrics and plots
     train_linear_model(checkpoint_dir, flags.FLAGS.load_json, results_path, 
-        flags.FLAGS.precip, 
+        flags.FLAGS.precip, flags.FLAGS.offset, 
         flags.FLAGS.save_nc_files)
 
 

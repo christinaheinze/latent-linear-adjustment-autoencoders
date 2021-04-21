@@ -102,7 +102,7 @@ def process_holdout(holdout_datasets, model, reg_model, save_nc_files, out_dir):
     return results
 
 
-def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
+def holdout_plots(results, model, reg, label, precip, offset, out_dir, out_dir_orig):
     ho_inputs, ho_recons, ho_annos, ho_xhatexp = results
     r2_maps_ho = eval_utils.plot_r2_map(ho_inputs, ho_recons, 
         ho_xhatexp, out_dir, "holdout_{}".format(label)) 
@@ -135,6 +135,10 @@ def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
         ho_inputs_2 = ho_inputs ** 2
         ho_recons_2 = ho_recons ** 2
         ho_xhatexp_2 = ho_xhatexp ** 2
+        if offset:
+            ho_inputs_2 = ho_inputs_2 - 25
+            ho_recons_2 = ho_recons_2 - 25
+            ho_xhatexp_2 = ho_xhatexp_2 - 25 
         r2_maps_ho_orig = eval_utils.plot_r2_map(ho_inputs_2, ho_recons_2, 
             ho_xhatexp_2, out_dir_orig, "holdout_orig_{}".format(label)) 
         mse_map_ho_orig = eval_utils.plot_mse_map(ho_inputs_2, ho_recons_2, 
@@ -144,7 +148,7 @@ def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
         mean_r2_x_xhat = np.mean(r2_maps_ho_orig[0])
         mean_r2_x_xhatexp = np.mean(r2_maps_ho_orig[1])
         eval_utils.visualize(ho_inputs, ho_annos, model, reg, out_dir_orig, 
-            "holdout_orig_{}".format(label), transform_back=True) 
+            "holdout_orig_{}".format(label), transform_back=True, offset=offset) 
         print("\n# Orig: {}".format(label))
         print("Mean MSE(x, xhat): {}".format(mean_mse_x_xhat))
         print("Mean MSE(x, xhatexp): {}".format(mean_mse_x_xhatexp))
@@ -162,7 +166,7 @@ def holdout_plots(results, model, reg, label, precip, out_dir, out_dir_orig):
             json.dump(metrics, result_file, sort_keys=True, indent=4)
 
 
-def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc_files):
+def train_linear_model(checkpoint_path, load_json, results_path, precip, offset, save_nc_files):
     # get configs from model
     with open(os.path.join(checkpoint_path, "hparams.pkl"), 'rb') as f:
         config = pickle.load(f)
@@ -406,6 +410,12 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
         te_inputs_2 = te_inputs ** 2
         te_recons_2 = te_recons ** 2
         te_xhatexp_2 = te_xhatexp ** 2
+
+        if offset:
+            te_inputs_2 = te_inputs_2 - 25
+            te_recons_2 = te_recons_2 - 25
+            te_xhatexp_2 = te_xhatexp_2 - 25
+
         r2_maps_test_orig = eval_utils.plot_r2_map(te_inputs_2, te_recons_2, 
             te_xhatexp_2, out_dir_orig, "test_orig") 
         np.save(os.path.join(out_dir_orig, "r2map_test_orig_xxhat.npy"), 
@@ -423,6 +433,12 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
         ho_inputs_2 = ho_inputs ** 2
         ho_recons_2 = ho_recons ** 2
         ho_xhatexp_2 = ho_xhatexp ** 2
+
+        if offset: 
+            ho_inputs_2 = ho_inputs_2 - 25
+            ho_recons_2 = ho_recons_2 - 25
+            ho_xhatexp_2 = ho_xhatexp_2 - 25
+
         r2_maps_ho_orig = eval_utils.plot_r2_map(ho_inputs_2, ho_recons_2, ho_xhatexp_2, 
             out_dir_orig, "holdout_orig") 
         np.save(os.path.join(out_dir_orig, "r2map_ho_orig_xxhat.npy"), 
@@ -439,19 +455,19 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
 
         # visualize reconstructions and interventions
         imgs_te_orig = eval_utils.visualize(te_inputs, te_annos, model, reg, 
-            out_dir_orig, "test_orig", transform_back=True) 
+            out_dir_orig, "test_orig", transform_back=True, offset=offset) 
         np.save(os.path.join(out_dir_orig, "te_orig_x.npy"), imgs_te_orig[0])
         np.save(os.path.join(out_dir_orig, "te_orig_xhat.npy"), imgs_te_orig[1])
         np.save(os.path.join(out_dir_orig, "te_orig_xhatexp.npy"), imgs_te_orig[2])
 
         imgs_ho_orig = eval_utils.visualize(ho_inputs, ho_annos, model, reg, 
-            out_dir_orig, "holdout_orig", transform_back=True) 
+            out_dir_orig, "holdout_orig", transform_back=True, offset=offset) 
         np.save(os.path.join(out_dir_orig, "ho_orig_x.npy"), imgs_ho_orig[0])
         np.save(os.path.join(out_dir_orig, "ho_orig_xhat.npy"), imgs_ho_orig[1])
         np.save(os.path.join(out_dir_orig, "ho_orig_xhatexp.npy"), imgs_ho_orig[2])
 
         imgs_tr_orig = eval_utils.visualize(tr_inputs, tr_annos, model, reg, 
-            out_dir_orig, "train_orig", transform_back=True)    
+            out_dir_orig, "train_orig", transform_back=True, offset=offset)    
         np.save(os.path.join(out_dir_orig, "tr_orig_x.npy"), imgs_tr_orig[0])
         np.save(os.path.join(out_dir_orig, "tr_orig_xhat.npy"), imgs_tr_orig[1])
         np.save(os.path.join(out_dir_orig, "tr_orig_xhatexp.npy"), imgs_tr_orig[2])
@@ -522,6 +538,6 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, save_nc
         results = process_holdout(holdout_datasets, model, reg, save_nc_files, out_dir)
 
         for ho in results:
-            holdout_plots(results[ho], model, reg, ho, precip, out_dir, out_dir_orig)
+            holdout_plots(results[ho], model, reg, ho, precip, offset, out_dir, out_dir_orig)
 
     

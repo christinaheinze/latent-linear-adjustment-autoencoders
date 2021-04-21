@@ -176,8 +176,8 @@ def compute_mse_map(x, xhat):
 
 
 def visualize(te_inputs, te_annos, model, reg, out_dir, split, 
-    num_imgs = 15, seed=2, transform_back=False, pdf=True, 
-    random=True, idx=None):
+    num_imgs = 15, seed=2, transform_back=False, offset=False, 
+    pdf=True, random=True, idx=None):
 
     plot_format = 'pdf' if pdf else 'png'
 
@@ -209,6 +209,11 @@ def visualize(te_inputs, te_annos, model, reg, out_dir, split,
         te_input_sub = te_input_sub ** 2
         te_reconstructions_sub = te_reconstructions_sub ** 2
         te_exp_reconstructions_sub = te_exp_reconstructions_sub ** 2
+        
+    if offset:
+        te_input_sub = te_input_sub - 25
+        te_reconstructions_sub = te_reconstructions_sub - 25
+        te_exp_reconstructions_sub = te_exp_reconstructions_sub - 25
 
     # plot input and reconstructions
     fig, axes = plt.subplots(num_imgs, 2, figsize=(2*2,2*num_imgs))
