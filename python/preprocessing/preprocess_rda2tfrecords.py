@@ -24,18 +24,20 @@ def main():
     Converts rda (R data format) files to tfrecords files
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fname', type=str, default='input.rda',
+    parser.add_argument('--fname', type=str, default='addho_prec_psl_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kcn_kcp_kcr_kcq_kcs_year_all_months_1_2_12_npc_psl1000_mean_ens_temp_psl_detrendTRUE_scale_TRUE_test_split_0.8_temp_disjoint_holdout_kcs.rda',
                         help='input data file name')
-    parser.add_argument('--file_path', type=str,
+    parser.add_argument('--file_path', type=str, default='/u/heinzec/data/climate-linear-latent-adjustment-ae/1955_2070/additional_ho',
                         help='path to input files')
-    parser.add_argument('--sname', type=str, default='output.tfrecords',
+    parser.add_argument('--sname', type=str, default='holdout_prec_psl_ens_kba_kbc_kbe_kbg_kbi_kbk_kbm_kbq_kbs_ho_ens_kcs.tfrecords',
                         help='file name for saving')
-    parser.add_argument('--save_dir', type=str,
+    parser.add_argument('--save_dir', type=str, default='/u/heinzec/data/climate-linear-latent-adjustment-ae/1955_2070/additional_ho',
                         help='path for saving files')
+    parser.add_argument('--dataset_string', type=str, default='ho',
+                        help='substring identifying dataset')
     args = parser.parse_args()
 
     # read R data
-    sub = "te"    
+    sub = args.dataset_string    
     robjects.r['load'](os.path.join(args.file_path, args.fname))
     Z = np.array(robjects.r['psl_Z_'+sub])
     Z_psl = np.array(robjects.r['psl_ens_mean_eof_'+sub])
