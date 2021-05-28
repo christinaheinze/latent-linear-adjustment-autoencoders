@@ -9,12 +9,12 @@ Building on variational autoencoders, we introduce the Latent Linear Adjustment 
 
 The schematic below illustrates a standard autoencoder that encodes daily precipitation fields to the latent space _L_ which are subsequently decoded to yield the reconstructions on the right hand side. 
 
-<img src="https://github.com/christinaheinze/climate-ae-refac/blob/master/documentation/linear_latent_ae1.png" width="800">
+<img src="documentation/linear_latent_ae1.png" width="800">
 
 To allow for the climate applications of interest, we extend a standard VAE by adding a linear component _h_ to the architecture. To predict circulation-induced precipitation fields, the Latent Linear Adjustment autoencoder combines the linear component _h_, which models the relationship between circulation and the latent space of an autocoder, with the autoencoder's nonlinear decoder. This is illustrated in the schematic below - here, the precipitation fields on the right hand side show the predictions of circulation-induced precipitation. 
 
 <p align="center">
-<img src="https://github.com/christinaheinze/climate-ae-refac/blob/master/documentation/linear_latent_ae2.png" width="450">
+<img src="documentation/linear_latent_ae2.png" width="450">
 </p>
 
 To allow for the linearity between circulation and the latent space, the model is trained with an additional penalty in the cost function that encourages this linearity. The proposed model hence leverages robustness advantages of linear models as well as the flexibility of deep neural networks.
