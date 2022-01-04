@@ -2,7 +2,7 @@
 
 This repository contains the code of the autoencoder model proposed in ["Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution"](https://gmd.copernicus.org/articles/14/4977/2021/). In the paper, we have demonstrated how Latent Linear Adjustment autoencoders can be applied for dynamical adjustment at high resolution in daily precipitation fields. Futher applications such as regional detection & attribution, statistical downscaling or transfer learning between models are conceivable.
 
-This README is not intended to be completely self-explanatory, and should be read alongside the manuscript. Below we give an overview of the model, followed by detailed instructions how to reproduce the results reported in the manuscript. 
+This README is not intended to be completely self-explanatory, and should be read alongside the paper. Below we give an overview of the model, followed by detailed instructions how to reproduce the results reported in the paper. 
 
 ## Model
 Building on variational autoencoders, we introduce the Latent Linear Adjustment autoencoder which enables estimation of the contribution of a coarse-scale atmospheric circulation proxy to daily precipitation at high-resolution and in a spatially coherent manner. 
@@ -21,7 +21,7 @@ To allow for the linearity between circulation and the latent space, the model i
 
 ## Installing dependencies
 
-You need Python 3.8. The dependencies are managed with [``poetry``](https://python-poetry.org/). To create a virtual environment and install them using poetry, run:
+You need at least Python 3.8. The dependencies are managed with [``poetry``](https://python-poetry.org/). To create a virtual environment and install them using poetry, run:
 
 ```
 python -m virtualenv env
@@ -36,7 +36,7 @@ We provide a sample data set which is available on Zenodo:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3949748.svg)](https://doi.org/10.5281/zenodo.3949748)
 
-The sample data set is a subset of the CRCM5-LE ([Leduc et al. 2019](https://journals.ametsoc.org/jamc/article/58/4/663/336/The-ClimEx-Project-A-50-Member-Ensemble-of-Climate)) and preprocessed as described in our manuscript (TODO: add link). The original data can be accessed at the [ClimEx data Access page](https://www.climex-project.org/en/data-access).
+The sample data set is a subset of the CRCM5-LE ([Leduc et al. 2019](https://journals.ametsoc.org/jamc/article/58/4/663/336/The-ClimEx-Project-A-50-Member-Ensemble-of-Climate)) and preprocessed as described in [the paper](https://gmd.copernicus.org/articles/14/4977/2021/). The original data can be accessed at the [ClimEx data Access page](https://www.climex-project.org/en/data-access).
 
 To correctly load the data, you need to copy the file [``settings.py``](https://github.com/christinaheinze/latent-linear-adjustment-autoencoders/blob/master/python/settings.py) and rename it to ``local_settings.py``. In ``local_settings.py``, specify (a) where the data is located in ``DATA_PATH``, and (b) where the output should be saved in ``OUT_PATH``. 
 
@@ -48,7 +48,7 @@ The commands to run the experiments are detailed in ``python/run-experiments.sh`
 The first step consists of training the Latent Linear Adjustment autoencoder model. From the ``python`` directory run:
 
 ```
-python3.7 climate_ae/models/ae/main_ae.py
+python climate_ae/models/ae/main_ae.py
 ```
 
 By default, the hyperparameters from the file ``python/climate_ae/models/ae/configs/config_dyn_adj_precip.json`` will be used which correspond to the settings needed to reproduce  the precipitation results reported in the manuscript. For temperature, the corresponding hyperparameters are given in ``python/climate_ae/models/ae/configs/config_dyn_adj_temp.json``.
@@ -58,13 +58,13 @@ Each trained model is associated with a so-called ``CHECKPOINT_ID`` which is nee
 After training the autoencoder, the linear model can be refitted non-iteratively (keeping the autoencoder parameter fixed) and a number of evaluation plots are produced with the following command. The ``CHECKPOINT_ID`` from the trained autoencoder needs to be passed here, such that the correct model is loaded.
 
 ```
-python3.7 climate_ae/models/ae/main_linear.py --checkpoint_id='CHECKPOINT_ID' --precip=1
+python climate_ae/models/ae/main_linear.py --checkpoint_id='CHECKPOINT_ID' --precip=1
 ```
 
 Finally, the weather generator can be trained using the following command, again passing the ``CHECKPOINT_ID`` from the trained autoencoder:
 
 ```
-python3.7 climate_ae/models/ae/main_generator.py --checkpoint_id='CHECKPOINT_ID' --precip=1
+python climate_ae/models/ae/main_generator.py --checkpoint_id='CHECKPOINT_ID' --precip=1
 ```
 
 ### Command-line arguments and further hyperparameters
@@ -120,7 +120,7 @@ The file ``checkpoints.zip`` needs to be extracted into the directory ``OUT_PATH
 For precipitation, the ``CHECKPOINT_ID`` is ``nKGagmsKDb_4249785``. For temperature, it is ``LDifH9DdVh_4383207``. Hence, to e.g. refit the linear model non-iteratively and to produce the evaluation plots as above, run the following command: 
 
 ```
-python3.7 climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
+python climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
 ```
 
 ## ETH-internal: Running on Leonhard
