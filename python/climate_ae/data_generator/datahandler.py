@@ -209,86 +209,86 @@ def prec_psl_short_dt_prec_input_fn(params, mode):
         dataset = prec_psl_short_dt_prec.test2(local_settings.DATA_PATH)
     elif mode == "test_kbb":
         dataset = prec_psl_short_dt_prec.test_kbb(local_settings.DATA_PATH)
-    # elif mode == "test_kbd":
-    #     dataset = prec_psl_short_dt_prec.test_kbd(local_settings.DATA_PATH)
-    # elif mode == "test_kbf":
-    #     dataset = prec_psl_short_dt_prec.test_kbf(local_settings.DATA_PATH)
-    # elif mode == "test_kbh":
-    #     dataset = prec_psl_short_dt_prec.test_kbh(local_settings.DATA_PATH)
-    # elif mode == "test_kbj":
-    #     dataset = prec_psl_short_dt_prec.test_kbj(local_settings.DATA_PATH)
-    # elif mode == "test_kbl":
-    #     dataset = prec_psl_short_dt_prec.test_kbl(local_settings.DATA_PATH)
-    # elif mode == "test_kbn":
-    #     dataset = prec_psl_short_dt_prec.test_kbn(local_settings.DATA_PATH)
-    # elif mode == "test_kbo":
-    #     dataset = prec_psl_short_dt_prec.test_kbo(local_settings.DATA_PATH)
-    # elif mode == "test_kbp":
-    #     dataset = prec_psl_short_dt_prec.test_kbp(local_settings.DATA_PATH)
-    # elif mode == "test_kbr":
-    #     dataset = prec_psl_short_dt_prec.test_kbr(local_settings.DATA_PATH)
-    # elif mode == "test_kbt":
-    #     dataset = prec_psl_short_dt_prec.test_kbt(local_settings.DATA_PATH)
-    # elif mode == "test_kbu":
-    #     dataset = prec_psl_short_dt_prec.test_kbu(local_settings.DATA_PATH)
-    # elif mode == "test_kbv":
-    #     dataset = prec_psl_short_dt_prec.test_kbv(local_settings.DATA_PATH)
-    # elif mode == "test_kbw":
-    #     dataset = prec_psl_short_dt_prec.test_kbw(local_settings.DATA_PATH)
-    # elif mode == "test_kbx":
-    #     dataset = prec_psl_short_dt_prec.test_kbx(local_settings.DATA_PATH)
-    # elif mode == "test_kby":
-    #     dataset = prec_psl_short_dt_prec.test_kby(local_settings.DATA_PATH)
-    # elif mode == "test_kbz":
-    #     dataset = prec_psl_short_dt_prec.test_kbz(local_settings.DATA_PATH)
-    # elif mode == "test_kca":
-    #     dataset = prec_psl_short_dt_prec.test_kca(local_settings.DATA_PATH)
-    # elif mode == "test_kcb":
-    #     dataset = prec_psl_short_dt_prec.test_kcb(local_settings.DATA_PATH)
-    # elif mode == "test_kcc":
-    #     dataset = prec_psl_short_dt_prec.test_kcc(local_settings.DATA_PATH)
-    # elif mode == "test_kcd":
-    #     dataset = prec_psl_short_dt_prec.test_kcd(local_settings.DATA_PATH)
-    # elif mode == "test_kce":
-    #     dataset = prec_psl_short_dt_prec.test_kce(local_settings.DATA_PATH)
-    # elif mode == "test_kcf":
-    #     dataset = prec_psl_short_dt_prec.test_kcf(local_settings.DATA_PATH)
-    # elif mode == "test_kcg":
-    #     dataset = prec_psl_short_dt_prec.test_kcg(local_settings.DATA_PATH)
-    # elif mode == "test_kch":
-    #     dataset = prec_psl_short_dt_prec.test_kch(local_settings.DATA_PATH)
-    # elif mode == "test_kci":
-    #     dataset = prec_psl_short_dt_prec.test_kci(local_settings.DATA_PATH)
-    # elif mode == "test_kcj":
-    #     dataset = prec_psl_short_dt_prec.test_kcj(local_settings.DATA_PATH)
-    # elif mode == "test_kck":
-    #     dataset = prec_psl_short_dt_prec.test_kck(local_settings.DATA_PATH)
-    # elif mode == "test_kcl":
-    #     dataset = prec_psl_short_dt_prec.test_kcl(local_settings.DATA_PATH)
-    # elif mode == "test_kcm":
-    #     dataset = prec_psl_short_dt_prec.test_kcm(local_settings.DATA_PATH)
-    # elif mode == "test_kcn":
-    #     dataset = prec_psl_short_dt_prec.test_kcn(local_settings.DATA_PATH)
-    # elif mode == "test_kco":
-    #     dataset = prec_psl_short_dt_prec.test_kco(local_settings.DATA_PATH)
-    # elif mode == "test_kcp":
-    #     dataset = prec_psl_short_dt_prec.test_kcp(local_settings.DATA_PATH)
-    # elif mode == "test_kcq":
-    #     dataset = prec_psl_short_dt_prec.test_kcq(local_settings.DATA_PATH)
-    # elif mode == "test_kcr":
-    #     dataset = prec_psl_short_dt_prec.test_kcr(local_settings.DATA_PATH)
-    # elif mode == "test_kcs":
-    #     dataset = prec_psl_short_dt_prec.test_kcs(local_settings.DATA_PATH)
-    # elif mode == "test_kct":
-    #     dataset = prec_psl_short_dt_prec.test_kct(local_settings.DATA_PATH)
-    # elif mode == "test_kcu":
-    #     dataset = prec_psl_short_dt_prec.test_kcu(local_settings.DATA_PATH)
-    # elif mode == "test_kcv":
-    #     dataset = prec_psl_short_dt_prec.test_kcv(local_settings.DATA_PATH)
-    # elif mode == "test_kcw":
-    #     dataset = prec_psl_short_dt_prec.test_kcw(local_settings.DATA_PATH)
-    # elif mode == "test_kcx":
-    #     dataset = prec_psl_short_dt_prec.test_kcx(local_settings.DATA_PATH)
+    elif mode == "test_kbd":
+        dataset = prec_psl_short_dt_prec.test_kbd(local_settings.DATA_PATH)
+    elif mode == "test_kbf":
+        dataset = prec_psl_short_dt_prec.test_kbf(local_settings.DATA_PATH)
+    elif mode == "test_kbh":
+        dataset = prec_psl_short_dt_prec.test_kbh(local_settings.DATA_PATH)
+    elif mode == "test_kbj":
+        dataset = prec_psl_short_dt_prec.test_kbj(local_settings.DATA_PATH)
+    elif mode == "test_kbl":
+        dataset = prec_psl_short_dt_prec.test_kbl(local_settings.DATA_PATH)
+    elif mode == "test_kbn":
+        dataset = prec_psl_short_dt_prec.test_kbn(local_settings.DATA_PATH)
+    elif mode == "test_kbo":
+        dataset = prec_psl_short_dt_prec.test_kbo(local_settings.DATA_PATH)
+    elif mode == "test_kbp":
+        dataset = prec_psl_short_dt_prec.test_kbp(local_settings.DATA_PATH)
+    elif mode == "test_kbr":
+        dataset = prec_psl_short_dt_prec.test_kbr(local_settings.DATA_PATH)
+    elif mode == "test_kbt":
+        dataset = prec_psl_short_dt_prec.test_kbt(local_settings.DATA_PATH)
+    elif mode == "test_kbu":
+        dataset = prec_psl_short_dt_prec.test_kbu(local_settings.DATA_PATH)
+    elif mode == "test_kbv":
+        dataset = prec_psl_short_dt_prec.test_kbv(local_settings.DATA_PATH)
+    elif mode == "test_kbw":
+        dataset = prec_psl_short_dt_prec.test_kbw(local_settings.DATA_PATH)
+    elif mode == "test_kbx":
+        dataset = prec_psl_short_dt_prec.test_kbx(local_settings.DATA_PATH)
+    elif mode == "test_kby":
+        dataset = prec_psl_short_dt_prec.test_kby(local_settings.DATA_PATH)
+    elif mode == "test_kbz":
+        dataset = prec_psl_short_dt_prec.test_kbz(local_settings.DATA_PATH)
+    elif mode == "test_kca":
+        dataset = prec_psl_short_dt_prec.test_kca(local_settings.DATA_PATH)
+    elif mode == "test_kcb":
+        dataset = prec_psl_short_dt_prec.test_kcb(local_settings.DATA_PATH)
+    elif mode == "test_kcc":
+        dataset = prec_psl_short_dt_prec.test_kcc(local_settings.DATA_PATH)
+    elif mode == "test_kcd":
+        dataset = prec_psl_short_dt_prec.test_kcd(local_settings.DATA_PATH)
+    elif mode == "test_kce":
+        dataset = prec_psl_short_dt_prec.test_kce(local_settings.DATA_PATH)
+    elif mode == "test_kcf":
+        dataset = prec_psl_short_dt_prec.test_kcf(local_settings.DATA_PATH)
+    elif mode == "test_kcg":
+        dataset = prec_psl_short_dt_prec.test_kcg(local_settings.DATA_PATH)
+    elif mode == "test_kch":
+        dataset = prec_psl_short_dt_prec.test_kch(local_settings.DATA_PATH)
+    elif mode == "test_kci":
+        dataset = prec_psl_short_dt_prec.test_kci(local_settings.DATA_PATH)
+    elif mode == "test_kcj":
+        dataset = prec_psl_short_dt_prec.test_kcj(local_settings.DATA_PATH)
+    elif mode == "test_kck":
+        dataset = prec_psl_short_dt_prec.test_kck(local_settings.DATA_PATH)
+    elif mode == "test_kcl":
+        dataset = prec_psl_short_dt_prec.test_kcl(local_settings.DATA_PATH)
+    elif mode == "test_kcm":
+        dataset = prec_psl_short_dt_prec.test_kcm(local_settings.DATA_PATH)
+    elif mode == "test_kcn":
+        dataset = prec_psl_short_dt_prec.test_kcn(local_settings.DATA_PATH)
+    elif mode == "test_kco":
+        dataset = prec_psl_short_dt_prec.test_kco(local_settings.DATA_PATH)
+    elif mode == "test_kcp":
+        dataset = prec_psl_short_dt_prec.test_kcp(local_settings.DATA_PATH)
+    elif mode == "test_kcq":
+        dataset = prec_psl_short_dt_prec.test_kcq(local_settings.DATA_PATH)
+    elif mode == "test_kcr":
+        dataset = prec_psl_short_dt_prec.test_kcr(local_settings.DATA_PATH)
+    elif mode == "test_kcs":
+        dataset = prec_psl_short_dt_prec.test_kcs(local_settings.DATA_PATH)
+    elif mode == "test_kct":
+        dataset = prec_psl_short_dt_prec.test_kct(local_settings.DATA_PATH)
+    elif mode == "test_kcu":
+        dataset = prec_psl_short_dt_prec.test_kcu(local_settings.DATA_PATH)
+    elif mode == "test_kcv":
+        dataset = prec_psl_short_dt_prec.test_kcv(local_settings.DATA_PATH)
+    elif mode == "test_kcw":
+        dataset = prec_psl_short_dt_prec.test_kcw(local_settings.DATA_PATH)
+    elif mode == "test_kcx":
+        dataset = prec_psl_short_dt_prec.test_kcx(local_settings.DATA_PATH)
 
     dataset = dataset.map(lambda x, anno, psl, temp, year, month, day: 
         {"inputs": x, "anno": anno, "psl_mean_ens": psl, "temp_mean_ens": temp, 
