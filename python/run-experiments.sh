@@ -12,15 +12,15 @@ export PYTHONPATH=$HOME/code/latent-linear-adjustment-autoencoders/python:$PYTHO
 ### Dynamical adjustment
 
 #### train autoencoder from scratch
-# python3.8 climate_ae/models/ae/main_ae.py 
+# python climate_ae/models/ae/main_ae.py 
 
 #### re-train linear model and produce plots (pass CHECKPOINT_ID from previous step)
-# python3.8 climate_ae/models/ae/main_linear.py --checkpoint_id='CHECKPOINT_ID' --precip=1
+# python climate_ae/models/ae/main_linear.py --checkpoint_id='CHECKPOINT_ID' --precip=1
 
 ### Weather generator
 
 #### re-train linear model and produce plots
-# python3.8 climate_ae/models/ae/main_generator.py --checkpoint_id='CHECKPOINT_ID' --precip=1
+# python climate_ae/models/ae/main_generator.py --checkpoint_id='CHECKPOINT_ID' --precip=1
 
 
 ## Using pre-trained models
@@ -33,5 +33,5 @@ python climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' 
 ### Weather generator
 
 #### re-train linear model and produce plots, using provided model
-# python3.8 climate_ae/models/ae/main_generator.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
+# python climate_ae/models/ae/main_generator.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
 
