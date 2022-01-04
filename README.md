@@ -123,36 +123,9 @@ For precipitation, the ``CHECKPOINT_ID`` is ``nKGagmsKDb_4249785``. For temperat
 python climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
 ```
 
-## ETH-internal: Running on Leonhard
-
-### Installing dependencies
-
-Run the following commands from the root directory of the repository to install the requirements: 
-```
-bsub -Is -R "rusage[mem=9000, ngpus_excl_p=1]" -R "select[gpu_model1==GeForceGTX1080Ti]" bash
-module load python_gpu/3.7.4
-module load eth_proxy
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-exit
-```
-
-### Data
-Follow the above steps as described under "Data".
-
-
-### Running experiments
-From the login node, run the following commands to launch the precipitation and temperature experiments, respectively:
-```
-source env/bin/activate
-cd launch_scripts
-sh submit-precip.sh
-sh submit-temp.sh
-```
 
 ## References
-* C. Heinze-Deml, S. Sippel, A. G. Pendergrass, F. Lehner, and N. Meinshausen, "Latent linear adjustment autoencoder v1. 0: a novel method for estimating and emulating dynamic precipitation at high resolution," Geoscientific Model Development, vol. 14, no. 8, pp. 4977–4999, 2021.
+* C. Heinze-Deml, S. Sippel, A. G. Pendergrass, F. Lehner, and N. Meinshausen, "Latent linear adjustment autoencoder v1. 0: a novel method for estimating and emulating dynamic precipitation at high resolution," Geoscientific Model Development, vol. 14, no. 8, pp. 4977–4999, 2021. [Link](https://gmd.copernicus.org/articles/14/4977/2021/)
 * Leduc, M., A. Mailhot, A. Frigon, J. Martel, R. Ludwig, G.B. Brietzke, M. Giguère, F. Brissette, R. Turcotte, M. Braun, and J.
 Scinocca, 2019: The ClimEx Project: A 50-Member Ensemble of Climate Change Projections at 12-km Resolution over
 Europe and Northeastern North America with the Canadian Regional Climate Model (CRCM5). J. Appl. Meteor.
