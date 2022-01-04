@@ -1,6 +1,6 @@
 # Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution
 
-This repository contains the code of the autoencoder model proposed in "Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution" (TODO: add arxiv/gmd link). In the manuscript, we have demonstrated how Latent Linear Adjustment autoencoders can be applied for dynamical adjustment at high resolution and for emulating dynamically-induced variability in daily precipitation fields. Futher applications such as regional detection & attribution, statistical downscaling or transfer learning between models are conceivable.
+This repository contains the code of the autoencoder model proposed in ["Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution"](https://gmd.copernicus.org/articles/14/4977/2021/). In the paper, we have demonstrated how Latent Linear Adjustment autoencoders can be applied for dynamical adjustment at high resolution in daily precipitation fields. Futher applications such as regional detection & attribution, statistical downscaling or transfer learning between models are conceivable.
 
 This README is not intended to be completely self-explanatory, and should be read alongside the manuscript. Below we give an overview of the model, followed by detailed instructions how to reproduce the results reported in the manuscript. 
 
@@ -152,7 +152,7 @@ sh submit-temp.sh
 ```
 
 ## References
-* Heinze-Deml, C., Sippel, S., Pendergrass, A. G., Lehner, F., and Meinshausen, N., 2020: Latent Linear Adjustment autoencoders: A novel method for estimating and emulating dynamic precipitation at high resolution. arXiV preprint  TODO: complete ref
+* C. Heinze-Deml, S. Sippel, A. G. Pendergrass, F. Lehner, and N. Meinshausen, "Latent linear adjustment autoencoder v1. 0: a novel method for estimating and emulating dynamic precipitation at high resolution," Geoscientific Model Development, vol. 14, no. 8, pp. 4977–4999, 2021.
 * Leduc, M., A. Mailhot, A. Frigon, J. Martel, R. Ludwig, G.B. Brietzke, M. Giguère, F. Brissette, R. Turcotte, M. Braun, and J.
 Scinocca, 2019: The ClimEx Project: A 50-Member Ensemble of Climate Change Projections at 12-km Resolution over
 Europe and Northeastern North America with the Canadian Regional Climate Model (CRCM5). J. Appl. Meteor.
