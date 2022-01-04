@@ -20,17 +20,17 @@ import climate_ae.models.ae.climate_utils as climate_utils
 
 import climate_ae.models.ae.train as train
 
-DEBUG = False
-process_additional_holdout_members = False
+DEBUG = True
+process_additional_holdout_members = True
 
 def load_data(inputs, model, subset=False, debug=False):
     # get training data for linear latent space model
     for b, features in enumerate(inputs):
-        if debug and b % 10 == 0 and b > 0:
+        if debug and b % 20 == 0 and b > 0:
             break
         if b % 100 == 0:
             print(b)
-        
+
         input_ = features["inputs"]
         recon_ = model.autoencode(input_, training=False)["output"]
         anno_ = train.get_annotations(features)
@@ -244,9 +244,10 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, offset,
     # get training data for linear latent space model
     tr_inputs, _, tr_latents, tr_annos, _, _, _ = load_data(train_inputs, model, 
         subset=True, debug=DEBUG)
+    
     # fit linear model
     reg = LinearRegression().fit(tr_annos, tr_latents)
-        
+    
     # get test data
     te_inputs, te_recons, _, te_annos, te_years, te_months, te_days = \
         load_data(test_inputs, model, debug=DEBUG)
@@ -520,14 +521,14 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, offset,
         
 
     if process_additional_holdout_members:
-        holdout_names = [#"kbd", "kbf", "kbh", "kbj", 
-            # "kbl", "kbn", "kbo", "kbp", "kbr"]
+        holdout_names = ["kbd", "kbf", "kbh", "kbj", 
+            "kbl", "kbn", "kbo", "kbp", "kbr"]
             # "kbt", "kbu", "kbv", "kbw", "kbx", 
             # "kby", "kbz", "kca", "kcb", "kcc", 
             # "kcd", "kce", "kcf", "kcg", "kch", 
             # "kci", "kcj", "kck", "kcl", "kcm", 
-            "kcn", "kco", "kcp", "kcq", "kcr", 
-            "kcs", "kct", "kcu", "kcv", "kcw", "kcx"]
+            # "kcn", "kco", "kcp", "kcq", "kcr", 
+            # "kcs", "kct", "kcu", "kcv", "kcw", "kcx"]
         holdout_datasets = {}
         for ho in holdout_names:
             holdout_datasets[ho] = input_anno(params=config, 
@@ -540,4 +541,5 @@ def train_linear_model(checkpoint_path, load_json, results_path, precip, offset,
         for ho in results:
             holdout_plots(results[ho], model, reg, ho, precip, offset, out_dir, out_dir_orig)
 
-    
+
+        
