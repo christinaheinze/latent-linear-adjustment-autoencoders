@@ -28,7 +28,7 @@ export PYTHONPATH=$HOME/code/latent-linear-adjustment-autoencoders/python:$PYTHO
 ### Dynamical adjustment
 
 #### re-train linear model and produce plots, using provided model
-python3.8 climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
+python climate_ae/models/ae/main_linear.py --checkpoint_id='nKGagmsKDb_4249785' --precip=1
 
 ### Weather generator
 
