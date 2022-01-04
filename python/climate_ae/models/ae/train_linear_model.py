@@ -20,8 +20,8 @@ import climate_ae.models.ae.climate_utils as climate_utils
 
 import climate_ae.models.ae.train as train
 
-DEBUG = True
-process_additional_holdout_members = True
+DEBUG = False
+process_additional_holdout_members = False
 
 def load_data(inputs, model, subset=False, debug=False):
     # get training data for linear latent space model
